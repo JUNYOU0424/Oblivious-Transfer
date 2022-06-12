@@ -31,7 +31,7 @@ void InitOTSender()
 
 void Recieve_Random_Matrix()
 {
-    char T1[256],T2[256] = {};
+    char T1[256], T2[256] = {};
     recv(forClientSockfd, T1, 32, 0);
     recv(forClientSockfd, T2, 32, 0);
     send(forClientSockfd, "get T1 & T2", 128, 0);
@@ -48,8 +48,8 @@ int main(int argc, char *argv[])
     forClientSockfd = accept(sockfd, (struct sockaddr *)&clientInfo, &addrlen);
     while (1)
     {
-     Recieve_Random_Matrix();
+        Recieve_Random_Matrix();
     }
-    
+
     return 0;
 }
