@@ -10,28 +10,27 @@
 #define PRINT_KEYS
 #define WRITE_TO_FILE
 
-void Gen_Key(char *pri_key,char *pub_key){
-    size_t pri_len;            // Length of private key
-    size_t pub_len;            // Length of public key
-    //char   *pri_key;           // Private key
-    //char   *pub_key;  
-    RSA *keypair = RSA_generate_key(KEY_LENGTH, PUB_EXP, NULL, NULL);
-    BIO *pri = BIO_new(BIO_s_mem());
-    BIO *pub = BIO_new(BIO_s_mem());
-    PEM_write_bio_RSAPrivateKey(pri, keypair, NULL, NULL, 0, NULL, NULL);
-    PEM_write_bio_RSAPublicKey(pub, keypair);
-    pri_len = BIO_pending(pri);
-    pub_len = BIO_pending(pub);
 
-    pri_key = malloc(pri_len + 1);
-    pub_key = malloc(pub_len + 1);
+void Encrypt(char *encrypt,RSA *keypair,char *err,char *msg){
+    //encrypt = malloc(RSA_size(keypair));
+    //err = malloc(130);
+    int encrypt_len;
+    if((encrypt_len = RSA_public_encrypt(strlen(msg)+1, (unsigned char*)msg, (unsigned char*)encrypt,
+                                         keypair, RSA_PKCS1_OAEP_PADDING)) == -1) {
+        ERR_load_crypto_strings();
+        ERR_error_string(ERR_get_error(), err);
+        fprintf(stderr, "Error encrypting message: %s\n", err);
+    }
+}
 
-    BIO_read(pri, pri_key, pri_len);
-    BIO_read(pub, pub_key, pub_len);
-
-    pri_key[pri_len] = '\0';
-    pub_key[pub_len] = '\0';
-    
+void Decrypt(char *decrypt,char *encrypt,char *err,RSA *keypair){
+    //decrypt = malloc(256);
+    if(RSA_private_decrypt(256, (unsigned char*)encrypt, (unsigned char*)decrypt,
+                           keypair, RSA_PKCS1_OAEP_PADDING) == -1) {
+        ERR_load_crypto_strings();
+        ERR_error_string(ERR_get_error(), err);
+        //fprintf(stderr, "Error decrypting message: %s\n", err);
+    }
 }
 
 /*int main(void) {

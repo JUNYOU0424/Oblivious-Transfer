@@ -38,7 +38,7 @@ void printf_buff(char *buff,int size) {
             printf("\n");
         }
     }
-    printf("\n\n\n\n");
+    printf("\n\n");
 }
 void encrpyt_buf(char *raw_buf, char **encrpy_buf, int len ) {
     AES_KEY aes;
